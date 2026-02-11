@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>For You ❤️</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="envelope-page">
+  <div class="envelope" onclick="openEnvelope()">
+    <div class="envelope-text">💌 Click Me 💌</div>
+  </div>
+
+  <script>
+    function openEnvelope() {
+      document.querySelector('.envelope').classList.add('open');
+      setTimeout(() => {
+        window.location.href = "proposal.html";
+      }, 800);
+    }
+  </script>
+</body>
+</html>
