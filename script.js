@@ -1,155 +1,151 @@
-const noBtn = document.getElementById("noBtn");
-const noWrapper = document.getElementById("noWrapper");
-const yesBtn = document.getElementById("yesBtn");
-const plea = document.getElementById("plea");
+document.addEventListener("DOMContentLoaded", function () {
 
-let mouseX = 0;
-let mouseY = 0;
+  const noBtn = document.getElementById("noBtn");
+  const noWrapper = document.getElementById("noWrapper");
+  const yesBtn = document.getElementById("yesBtn");
+  const plea = document.getElementById("plea");
 
-let btnX = 0;
-let btnY = 0;
+  let mouseX = 0;
+  let mouseY = 0;
 
-let modalOpen = false;
+  let btnX = 0;
+  let btnY = 0;
 
-const safeDistance = 200;
-const panicMultiplier = 200;
+  let modalOpen = false;
 
-/* ---------------- TRACK MOUSE ---------------- */
-document.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
+  const safeDistance = 200;
+  const panicMultiplier = 2.5;
 
-/* ---------------- RUNAWAY LOGIC ---------------- */
-function animate() {
+  /* ---------------- TRACK MOUSE ---------------- */
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
 
-  if (!modalOpen) {
+  /* ---------------- RUNAWAY LOGIC ---------------- */
+  function animate() {
 
-    const rect = noWrapper.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    if (!modalOpen && noWrapper) {
 
-    const dx = centerX - mouseX;
-    const dy = centerY - mouseY;
+      const rect = noWrapper.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
+      const dx = centerX - mouseX;
+      const dy = centerY - mouseY;
 
-    if (distance < safeDistance) {
-      const angle = Math.atan2(dy, dx);
-      const strength = (safeDistance - distance) * panicMultiplier;
+      const distance = Math.sqrt(dx * dx + dy * dy);
 
-      btnX += Math.cos(angle) * strength * 0.05;
-      btnY += Math.sin(angle) * strength * 0.05;
+      if (distance < safeDistance) {
+        const angle = Math.atan2(dy, dx);
+        const strength = (safeDistance - distance) * panicMultiplier;
 
-      plea.style.opacity = 1;
+        btnX += Math.cos(angle) * strength * 0.05;
+        btnY += Math.sin(angle) * strength * 0.05;
+
+        if (plea) plea.style.opacity = 1;
+      }
+
+      noWrapper.style.transform = `translate(${btnX}px, ${btnY}px)`;
     }
 
-    // Keep inside screen
-    const margin = 60;
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    const newRect = noWrapper.getBoundingClientRect();
-
-    if (newRect.left < margin) btnX += 10;
-    if (newRect.right > screenWidth - margin) btnX -= 10;
-    if (newRect.top < margin) btnY += 10;
-    if (newRect.bottom > screenHeight - margin) btnY -= 10;
-
-    noWrapper.style.transform = `translate(${btnX}px, ${btnY}px)`;
+    requestAnimationFrame(animate);
   }
 
-  requestAnimationFrame(animate);
-}
+  animate();
 
-animate();
+  /* ---------------- YES BUTTON ---------------- */
+  if (yesBtn) {
+    yesBtn.addEventListener("click", () => {
+      document.body.innerHTML = `
+        <div style="
+          height:100vh;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          background:#fce4ec;
+          text-align:center;
+          font-size:42px;
+          font-weight:bold;">
+          💖 YAYYYY 💖<br><br>
+          You’re officially my Valentine ❤️
+        </div>
+      `;
+    });
+  }
 
-/* ---------------- YES BUTTON ---------------- */
-yesBtn.addEventListener("click", () => {
-  document.body.innerHTML = `
-    <div style="
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      background:#fce4ec;
-      text-align:center;
-      font-size:42px;
-      font-weight:bold;">
-      💖 YAYYYY 💖<br><br>
-      You’re officially my Valentine ❤️
-    </div>
-  `;
-});
+  /* ---------------- NO BUTTON FAILSAFE ---------------- */
+  if (noBtn) {
+    noBtn.addEventListener("click", () => {
+      modalOpen = true;
+      showNoModal();
+    });
+  }
 
-/* ---------------- NO BUTTON FAILSAFE ---------------- */
-noBtn.addEventListener("click", () => {
-  modalOpen = true;
-  showNoModal();
-});
+  function showNoModal() {
 
-function showNoModal() {
-
-  const modal = document.createElement("div");
-  modal.id = "noModal";
-  modal.innerHTML = `
-    <div style="
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.6);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      z-index:9999;">
-      
+    const modal = document.createElement("div");
+    modal.innerHTML = `
       <div style="
-        background:white;
-        padding:40px;
-        border-radius:20px;
-        text-align:center;
-        width:400px;
-        font-size:24px;
-        font-weight:bold;">
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.6);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        z-index:9999;">
         
-        Are you sure you didn’t mean YES? 😏
-        
-        <div style="margin-top:30px;">
+        <div style="
+          background:white;
+          padding:40px;
+          border-radius:20px;
+          text-align:center;
+          width:400px;
+          font-size:24px;
+          font-weight:bold;">
           
-          <button id="modalYes" style="
-            padding:15px 30px;
-            font-size:20px;
-            margin-right:15px;
-            background:#43a047;
-            color:white;
-            border:none;
-            border-radius:10px;
-            cursor:pointer;">
-            Oops, YES 💖
-          </button>
+          Are you sure you didn’t mean YES? 😏
+          
+          <div style="margin-top:30px;">
+            
+            <button id="modalYes" style="
+              padding:15px 30px;
+              font-size:20px;
+              margin-right:15px;
+              background:#43a047;
+              color:white;
+              border:none;
+              border-radius:10px;
+              cursor:pointer;">
+              Oops, YES 💖
+            </button>
 
-          <button id="modalNo" style="
-            padding:15px 30px;
-            font-size:20px;
-            background:#e53935;
-            color:white;
-            border:none;
-            border-radius:10px;
-            cursor:pointer;">
-            No I meant NO
-          </button>
+            <button id="modalNo" style="
+              padding:15px 30px;
+              font-size:20px;
+              background:#e53935;
+              color:white;
+              border:none;
+              border-radius:10px;
+              cursor:pointer;">
+              No I meant NO
+            </button>
 
+          </div>
         </div>
       </div>
-    </div>
-  `;
+    `;
 
-  document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-  document.getElementById("modalYes").onclick = () => {
-    yesBtn.click();
-  };
+    document.getElementById("modalYes").onclick = () => {
+      yesBtn.click();
+    };
 
-  document.getElementById("modalNo").onclick = () => {
-    document.body.removeChild(modal);
-    modalOpen = false;
-  };
-}
+    document.getElementById("modalNo").onclick = () => {
+      document.body.removeChild(modal);
+      modalOpen = false;
+    };
+  }
+
+});

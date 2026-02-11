@@ -44,7 +44,7 @@ body {
   overflow: hidden;
 }
 
-/* ---------- BUTTON STYLES ----------*/
+/* ---------- BUTTON BASE STYLES ---------- */
 button {
   padding: 22px 48px;
   font-size: 28px;
@@ -52,13 +52,9 @@ button {
   border-radius: 18px;
   border: none;
   cursor: pointer;
-  position: absolute;
 
-  /* Perspective / printed look */
   transform-origin: center;
-  transform: perspective(800px) rotateX(6deg) rotateZ(-2deg);
-  
-  /* Printed-on-board depth */
+
   box-shadow:
     inset 0 -4px 0 rgba(0, 0, 0, 0.15),
     0 6px 10px rgba(0, 0, 0, 0.25);
@@ -66,40 +62,36 @@ button {
   transition: transform 0.15s ease;
 }
 
-/*
-button {
-  padding: 22px 48px;    
-  font-size: 28px;
-  font-weight: bold;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  position: absolute;
-}
-*/
-
 /* ---------- YES BUTTON ---------- */
-/* 🔧 YOU WILL ADJUST THESE VALUES */
 #yesBtn {
+  position: absolute;
   top: 57%;
   left: 24%;
+
   background: #43a047;
   color: white;
 
-  /* Slight tilt difference like the poster */
   transform: perspective(800px) rotateX(6deg) rotateZ(-13deg) skewX(-2deg);
 }
 
-/* ---------- NO BUTTON ---------- */
-/* 🔧 YOU WILL ADJUST THESE VALUES */
-#noBtn {
+/* ---------- NO WRAPPER (MOVES) ---------- */
+#noWrapper {
+  position: absolute;
   top: 53%;
   left: 32.5%;
+
+  perspective: 800px;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+/* ---------- NO BUTTON (TILT ONLY) ---------- */
+#noBtn {
   background: #e53935;
   color: white;
 
-  /* Opposite tilt for realism */
-  transform: perspective(800px) rotateX(6deg) rotateZ(-13deg) skewX(1deg);
+  transform: rotateX(6deg) rotateZ(-13deg) skewX(1deg);
+  backface-visibility: hidden;
 }
 
 /* ---------- RUNNING TEXT ---------- */
